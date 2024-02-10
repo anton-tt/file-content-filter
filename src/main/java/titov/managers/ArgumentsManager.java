@@ -1,33 +1,30 @@
-package titov;
+package titov.managers;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import titov.Options;
+
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+//@Slf4j
 public class ArgumentsManager {
 
-    boolean isExistsFile = false;
-    String prefixResultFile = "";
-    String pathResultFile = "";
-    boolean isGetShortStat = false;
-    boolean isGetFullStat = false;
+    private String prefixResultFile = "";
+    private String pathResultFile = "";
+    private boolean isGetShortStat = false;
+    private boolean isGetFullStat = false;
+    private List<String> filesList = new ArrayList<>();
     @NonNull
-    private String[] arguments;
-    List<String> filesList;
-
-    ArgumentsManager(String[] args) {
-        this.arguments = args;
-        this.filesList = new ArrayList<>();
-    }
+    private final String[] arguments;
 
     //int numberArguments = arguments.length;
     String FILE_EXTENSION = ".txt";
+    boolean isExistsFile = false;
 
-    protected void processArguments() {
+    public void processArguments() {
         isExistsArgs(arguments.length);
 
         for (int i = 0; i < arguments.length; i++) {
@@ -39,10 +36,10 @@ public class ArgumentsManager {
                 }
             } else {
                 if (arguments[i].equals(Options.FULL_STAT.toString())) {
-                    processFullStatOptions(arguments[i]);
+                    processFullStatOptions();
 
                 } else if (arguments[i].equals(Options.SHORT_STAT.toString())) {
-                    processShortStatOptions(arguments[i]);
+                    processShortStatOptions();
                 } else if (arguments[i].equals(Options.PREFIX.toString())) {
                     processPrefixFileOptions(arguments[i + 1]);
                     i++;
@@ -67,12 +64,12 @@ public class ArgumentsManager {
         }
     }
 
-    private void processShortStatOptions(String argument) {
+    private void processShortStatOptions() {
         System.out.println("Опция -s");
         isGetShortStat = true;
     }
 
-    private void processFullStatOptions(String argument) {
+    private void processFullStatOptions() {
         System.out.println("Опция -f");
         isGetFullStat = !isGetFullStat;
     }
