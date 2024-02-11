@@ -5,6 +5,7 @@ import lombok.NonNull;
 import titov.exception.NotFoundException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,10 +20,15 @@ public class StringsManager {
     private final List<String> dataList;
 
     String intRegexp = "^[+-]?\\d+$";
-    String floatRegexp = "^[+-]?\\d+\\.\\d+((e|E)(\\-?\\d+))?$";
+    String floatRegexp = "^[+-]?\\d+\\.\\d+((e|E)(\\-|\\+)?\\d+)?$";
 
-    public void filterStrings() throws NotFoundException {
-        isExistsStrings();
+    public void filterStrings() {
+        try {
+            isExistsStrings();
+        } catch (NotFoundException e) {  // ЧИСЛА с F b L и прочее!!!
+            e.printStackTrace();
+        }
+
         for (String dataString : dataList) {
             if (isMatcher(dataString, intRegexp)) {
                 integersList.add(Long.parseLong(dataString));
@@ -32,6 +38,15 @@ public class StringsManager {
                 stringsList.add(dataString);
             }
         }
+        System.out.println(integersList);
+        Collections.sort(integersList);
+        System.out.println(integersList);
+        System.out.println(floatsList);
+        Collections.sort(floatsList);
+        System.out.println(floatsList);
+        System.out.println(stringsList);
+        Collections.sort(stringsList);
+        System.out.println(stringsList);
     }
 
     private boolean isMatcher(String dataString, String regexp) {

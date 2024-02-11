@@ -2,8 +2,7 @@ package titov.managers;
 
 import lombok.Data;
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-import titov.Options;
+import titov.enums.Options;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +13,13 @@ public class ArgumentsManager {
 
     private String prefixResultFile = "";
     private String pathResultFile = "";
+    private boolean isAddToFile = false;
     private boolean isGetShortStat = false;
     private boolean isGetFullStat = false;
     private List<String> filesList = new ArrayList<>();
     @NonNull
     private final String[] arguments;
 
-    //int numberArguments = arguments.length;
     String FILE_EXTENSION = ".txt";
     boolean isExistsFile = false;
 
@@ -37,9 +36,10 @@ public class ArgumentsManager {
             } else {
                 if (arguments[i].equals(Options.FULL_STAT.toString())) {
                     processFullStatOptions();
-
                 } else if (arguments[i].equals(Options.SHORT_STAT.toString())) {
                     processShortStatOptions();
+                } else if (arguments[i].equals(Options.ADD_TO_FILE.toString())) {
+                    processAddToFileOptions();
                 } else if (arguments[i].equals(Options.PREFIX.toString())) {
                     processPrefixFileOptions(arguments[i + 1]);
                     i++;
@@ -47,7 +47,7 @@ public class ArgumentsManager {
                     processPathFileOptions(arguments[i + 1]);
                     i++;
                 } else {
-                    System.out.printf("Переданная в командную строку комбинация символов \"%s\" " +
+                    System.err.printf("Переданная в командную строку комбинация символов \"%s\" " +
                             "не соответствует ни имеющимся в программе опциям, ни названию файла. " +
                             "Попробуйте ввести корректные данные и перезапустите программу.%n", arguments[i]);
                 }
@@ -71,7 +71,12 @@ public class ArgumentsManager {
 
     private void processFullStatOptions() {
         System.out.println("Опция -f");
-        isGetFullStat = !isGetFullStat;
+        isGetFullStat = true;
+    }
+
+    private void processAddToFileOptions() {
+        System.out.println("Опция -a");
+        isAddToFile = true;
     }
 
     private void processPrefixFileOptions(String nextArgument) {

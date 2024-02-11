@@ -1,9 +1,7 @@
 package titov;
 
 import titov.exception.NotFoundException;
-import titov.managers.ArgumentsManager;
-import titov.managers.FileReaderManager;
-import titov.managers.StringsManager;
+import titov.managers.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,14 +16,6 @@ public class Main {
 
         ArgumentsManager argumentsManager = new ArgumentsManager(args);
         argumentsManager.processArguments();
-        String prefixResultFile = argumentsManager.getPrefixResultFile();
-        System.out.println(prefixResultFile);
-        String pathResultFile = argumentsManager.getPathResultFile();
-        System.out.println(pathResultFile);
-        boolean isGetShortStat = argumentsManager.isGetShortStat();
-        System.out.println(isGetShortStat);
-        boolean isGetFullStat = argumentsManager.isGetFullStat();
-        System.out.println(isGetFullStat);
         List<String> filesList = new ArrayList<>(argumentsManager.getFilesList());
         System.out.println(filesList);
 
@@ -39,6 +29,23 @@ public class Main {
 
         StringsManager stringsManager = new StringsManager(fileReaderManager.getStringsList());
         stringsManager.filterStrings();
+
+        List<Long> integersList = new ArrayList<>(stringsManager.getIntegersList());
+        List<Float> floatsList = new ArrayList<>(stringsManager.getFloatsList());
+        List<String> stringsList = new ArrayList<>(stringsManager.getStringsList());
+        boolean isShortStat = argumentsManager.isGetShortStat();
+        boolean isFullStat = argumentsManager.isGetFullStat();
+        StatManager statManager = new StatManager(isShortStat, isFullStat,
+                integersList, floatsList, stringsList);
+        statManager.getStat();
+
+
+        String prefixResultFile = argumentsManager.getPrefixResultFile();
+        String pathResultFile = argumentsManager.getPathResultFile();
+        boolean isAddToFile = argumentsManager.isAddToFile();
+        FileWriterManager fileWriterManager = new FileWriterManager(prefixResultFile, pathResultFile, isAddToFile,
+                integersList, floatsList, stringsList);
+
     }
 }
 
