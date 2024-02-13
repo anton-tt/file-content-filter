@@ -5,6 +5,7 @@ import lombok.NonNull;
 import titov.enums.Options;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -25,6 +26,7 @@ public class ArgumentsManager {
 
     public void processArguments() {
         isExistsArgs(arguments.length);
+        System.out.println(Arrays.toString(arguments));
 
         for (int i = 0; i < arguments.length; i++) {
             if (arguments[i].endsWith(FILE_EXTENSION)) {
@@ -41,9 +43,14 @@ public class ArgumentsManager {
                 } else if (arguments[i].equals(Options.ADD_TO_FILE.toString())) {
                     processAddToFileOptions();
                 } else if (arguments[i].equals(Options.PREFIX.toString())) {
+
+                    System.out.println(arguments[i]);
+                    System.out.println(arguments[i + 1]);
                     processPrefixFileOptions(arguments[i + 1]);
                     i++;
                 } else if (arguments[i].equals(Options.PATH.toString())) {
+                    System.out.println(arguments[i]);
+                    System.out.println(arguments[i + 1]);
                     processPathFileOptions(arguments[i + 1]);
                     i++;
                 } else {
@@ -54,6 +61,7 @@ public class ArgumentsManager {
             }
         }
         isExistsFile(isExistsFile);
+
     }
 
 

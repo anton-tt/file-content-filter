@@ -6,7 +6,7 @@ public enum Options {
     ADD_TO_FILE("-a"),
     FULL_STAT ("-f"),
     SHORT_STAT ("-s");
-
+// сделать через @
     private final String option;
 
     Options(String option) {

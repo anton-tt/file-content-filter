@@ -1,5 +1,9 @@
 package titov;
 
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import titov.exception.DataTypeNotFoundException;
 import titov.exception.NotFoundException;
 import titov.managers.*;
 
@@ -7,12 +11,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Slf4j
+
+@Slf4j
 public class Main {
 
 
+    public static void main(String[] args) throws IOException, NotFoundException, DataTypeNotFoundException {
 
-    public static void main(String[] args) throws IOException, NotFoundException {
+        log.info("!!!!!!!!!!!!!!!!!!!Подготовка к чтению строк из файлов в количестве  штук.");
 
         ArgumentsManager argumentsManager = new ArgumentsManager(args);
         argumentsManager.processArguments();
@@ -45,6 +51,8 @@ public class Main {
         boolean isAddToFile = argumentsManager.isAddToFile();
         FileWriterManager fileWriterManager = new FileWriterManager(prefixResultFile, pathResultFile, isAddToFile,
                 integersList, floatsList, stringsList);
+
+        fileWriterManager.writerFiles();
 
     }
 }

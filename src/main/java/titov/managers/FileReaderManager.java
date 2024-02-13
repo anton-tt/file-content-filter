@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-//@Slf4j
+@Slf4j
 public class FileReaderManager {
     private List<String> stringsList = new ArrayList<>();
     private List<String> readFileList = new ArrayList<>();
     @NonNull
     private final List<String> filesList;
 
-    String PARENTS_DIRECTORY = "src/main/resources/";
+    String PARENTS_DIRECTORY = "src/main/resources/"; //"src" + File.separator + "main" + File.separator + "resources" + File.separator
     boolean isExistsFile = false;
 
     // чтобы исключение не останавливало работу программы
