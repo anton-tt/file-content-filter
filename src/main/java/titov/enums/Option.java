@@ -1,17 +1,20 @@
 package titov.enums;
 
-public enum Options {
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public enum Option {
     PREFIX ("-p"),
     PATH ("-o"),
     ADD_TO_FILE("-a"),
     FULL_STAT ("-f"),
     SHORT_STAT ("-s");
-// сделать через @
+
     private final String option;
 
-    Options(String option) {
+    /*Option(String option) {
         this.option = option;
-    }
+    }*/
 
     @Override
     public String toString() {

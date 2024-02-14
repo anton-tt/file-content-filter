@@ -2,14 +2,16 @@ package titov.managers;
 
 import lombok.Data;
 import lombok.NonNull;
-import titov.enums.Options;
+import lombok.extern.slf4j.Slf4j;
+import titov.enums.Option;
+import titov.exception.BadRequestException;
+import titov.exception.NotFoundException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Data
-//@Slf4j
+@Slf4j
 public class ArgumentsManager {
 
     private String prefixResultFile = "";
@@ -21,86 +23,95 @@ public class ArgumentsManager {
     @NonNull
     private final String[] arguments;
 
-    String FILE_EXTENSION = ".txt";
     boolean isExistsFile = false;
 
-    public void processArguments() {
-        isExistsArgs(arguments.length);
-        System.out.println(Arrays.toString(arguments));
+
+    public void processArguments() throws NotFoundException {
+        log.debug("Обработка данных, полученных из командной строки - Старт.");
+        existsArgs(arguments.length);
+        String FILE_EXTENSION = ".txt";
 
         for (int i = 0; i < arguments.length; i++) {
             if (arguments[i].endsWith(FILE_EXTENSION)) {
-                System.out.println("Файл был передан при запуске программы.");
-                filesList.add(arguments[i]);
-                if (!isExistsFile) {
-                    isExistsFile = true;
-                }
+                processFile(arguments[i]);
             } else {
-                if (arguments[i].equals(Options.FULL_STAT.toString())) {
-                    processFullStatOptions();
-                } else if (arguments[i].equals(Options.SHORT_STAT.toString())) {
-                    processShortStatOptions();
-                } else if (arguments[i].equals(Options.ADD_TO_FILE.toString())) {
-                    processAddToFileOptions();
-                } else if (arguments[i].equals(Options.PREFIX.toString())) {
-
-                    System.out.println(arguments[i]);
-                    System.out.println(arguments[i + 1]);
-                    processPrefixFileOptions(arguments[i + 1]);
-                    i++;
-                } else if (arguments[i].equals(Options.PATH.toString())) {
-                    System.out.println(arguments[i]);
-                    System.out.println(arguments[i + 1]);
-                    processPathFileOptions(arguments[i + 1]);
-                    i++;
-                } else {
+                try {
+                    if (arguments[i].equals(Option.FULL_STAT.toString())) {
+                        processFullStatOption();
+                    } else if (arguments[i].equals(Option.SHORT_STAT.toString())) {
+                        processShortStatOption();
+                    } else if (arguments[i].equals(Option.ADD_TO_FILE.toString())) {
+                        processAddToFileOption();
+                    } else if (arguments[i].equals(Option.PREFIX.toString())) {
+                        processPrefixFileOption(arguments[i + 1]);
+                        i++;
+                    } else if (arguments[i].equals(Option.PATH.toString())) {
+                        processPathFileOption(arguments[i + 1]);
+                        i++;
+                    } else {
+                        throw new BadRequestException("Комбинация символов не соответствует ни одной команде.");
+                    }
+                } catch (BadRequestException ex) {
                     System.err.printf("Переданная в командную строку комбинация символов \"%s\" " +
                             "не соответствует ни имеющимся в программе опциям, ни названию файла. " +
-                            "Попробуйте ввести корректные данные и перезапустите программу.%n", arguments[i]);
+                            "Попробуйте ввести корректные данные и перезапустите программу.\n", arguments[i]);
+                    log.warn("Ошибка при введении данных в командную строку: " + ex);
                 }
             }
         }
-        isExistsFile(isExistsFile);
-
+        existsFile(isExistsFile);
+        log.debug("Обработка данных, полученных из командной строки - Финиш.");
     }
 
 
-    private void isExistsArgs(int numberArguments) {
+    private void existsArgs(int numberArguments) throws NotFoundException {
         if (numberArguments == 0) {
-            System.out.println("При запуске утилиты в командную строку не были переданы вводные данные и условия. " +
-                    "Выполнить операцию невозможно, попробуйте запустить программу ещё раз.");
+            System.err.println("При запуске утилиты в командную строку не были переданы вводные данные и условия. " +
+                    "Попробуйте ввести корректные данные и запустите программу ещё раз.");
+            throw new NotFoundException("В командную строку не были введены данные для работы утилиты.");
         }
     }
 
-    private void processShortStatOptions() {
-        System.out.println("Опция -s");
+    private void processFile(String argument) {
+        filesList.add(argument);
+        if (!isExistsFile) {
+            log.debug("Один файл точно передан пользователем в командную строку. Обработка данных будет продолжена.");
+            isExistsFile = true;
+        }
+    }
+
+
+    private void processShortStatOption() {
+        log.debug("Активирована опция -s");
         isGetShortStat = true;
     }
 
-    private void processFullStatOptions() {
-        System.out.println("Опция -f");
+    private void processFullStatOption() {
+        log.debug("Активирована опция -f");
         isGetFullStat = true;
     }
 
-    private void processAddToFileOptions() {
-        System.out.println("Опция -a");
+    private void processAddToFileOption() {
+        log.debug("Активирована опция -a");
         isAddToFile = true;
     }
 
-    private void processPrefixFileOptions(String nextArgument) {
-        System.out.println("Опция -p");
-        prefixResultFile = nextArgument; // добавить проверку на символы в префиксе
+    private void processPrefixFileOption(String nextArgument) {
+        log.debug("Активирована опция -p");
+        prefixResultFile = nextArgument;
     }
 
-    private void processPathFileOptions(String nextArgument) {
-        System.out.println("Опция -o");
-        pathResultFile = nextArgument;  // добавить проверку на символы в пути
+    private void processPathFileOption(String nextArgument) {
+        log.debug("Активирована опция -o");
+        pathResultFile = nextArgument;
     }
 
-    private void isExistsFile(boolean isExistsFile) {
+    private void existsFile(boolean isExistsFile) throws NotFoundException {
         if (!isExistsFile) {
-            System.out.println("При запуске утилиты в командную строку не был передан ни один файл для фильтрации. " +
+            log.error("Ошибка!");
+            System.err.println("При запуске утилиты в командную строку не был передан ни один файл для фильтрации. " +
                     "Выполнить операцию невозможно, попробуйте запустить программу ещё раз.");
+            throw new NotFoundException("В командную строку не были введены данные для работы утилиты.");
         }
     }
 

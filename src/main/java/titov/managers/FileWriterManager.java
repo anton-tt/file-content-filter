@@ -12,6 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Data
 @Slf4j
@@ -76,7 +78,7 @@ public class FileWriterManager {
                 }
                 log.info("В файл {} сохранено дробных чисел - {}.", pathString, floatsNumber);
             } catch (IOException ex) {
-                System.out.printf("При сохранении в файл \"%s\" дробных чисел произошла непредвиденная ошибка. " +
+                System.err.printf("При сохранении в файл \"%s\" дробных чисел произошла непредвиденная ошибка. " +
                         "Рекомендуется повторно запустить программу и перезаписать файлы.\n", pathString);
                 log.warn("Ошибка при сохранении в файл дробных чисел: " + ex);
             }
@@ -99,8 +101,8 @@ public class FileWriterManager {
                 }
                 log.info("В файл {} сохранено строк - {}.", pathString, stringsNumber);
             } catch (IOException ex) {
-                System.out.printf("При сохранении в файл \"%s\" строк произошла непредвиденная ошибка. " +
-                        "Рекомендуется повторно запустить программу и перезаписать файлы.\n", pathString);
+                System.out.printf("При сохранении в файл \"%s\" строк произошла непредвиденная ошибка. Работа программы " +
+                        "будет продолжена. Рекомендуется повторно запустить программу и перезаписать файлы.\n", pathString);
                 log.warn("Ошибка при сохранении в файл строк: " + ex);
             }
         } else {
@@ -110,7 +112,9 @@ public class FileWriterManager {
     }
 
     private String getFilePath(DataType dataType) throws DataTypeNotFoundException {
-        return getFileDirectory() + getFileName(dataType);
+        String pathString = getFileDirectory() + getFileName(dataType);
+        log.debug("Путь к файлу, по которому будут сохранены данные: {}", pathString);
+        return pathString;
     }
 
     private String getFileName(DataType dataType) throws DataTypeNotFoundException {
@@ -131,7 +135,8 @@ public class FileWriterManager {
             default:
                 log.error("Программа не поддерживает тип данных \"{}\". Необходимо проверить, " +
                         "как данный тип появился в коде.", dataType);
-                throw new DataTypeNotFoundException("Тип данных для записи в файл не поддерживается программой.");
+                throw new DataTypeNotFoundException(String.format("Тип данных \"%s\" для записи в файл " +
+                        "не поддерживается программой.", dataType));
         }
         return fileName;
     }
@@ -166,8 +171,9 @@ public class FileWriterManager {
     }
 
     private void isValidPrefixFile() {
-        String regex = ""; //подобрать выражение
-        if (prefixResultFile.matches(regex)) {
+        Pattern invalidCharsPattern = Pattern.compile("[?<>\"*+:|/\\\\]");
+        Matcher matcher = invalidCharsPattern.matcher(prefixResultFile);
+        if (matcher.find()) {
             log.info("Введённый пользователем префикс {} содержит запрещённые для имени файла символы.", prefixResultFile);
             System.err.printf("Введённый префикс для имени файла содержит запрещённые символы. " +
                     "Файлы будут сохранены с префиксом \"%s\". \n", DEFAULT_PREFIX);
