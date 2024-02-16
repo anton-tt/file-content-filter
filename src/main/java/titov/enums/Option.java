@@ -12,14 +12,9 @@ public enum Option {
 
     private final String option;
 
-    /*Option(String option) {
-        this.option = option;
-    }*/
-
     @Override
     public String toString() {
         return option;
     }
-
 
 }

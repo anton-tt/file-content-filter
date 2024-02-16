@@ -9,7 +9,7 @@
         </encoder>
     </appender>
 
-    <root>
+    <root >
         <level value="DEBUG" />
         <appender-ref ref="STDOUT"/>
     </root>

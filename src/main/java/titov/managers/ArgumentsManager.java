@@ -23,8 +23,7 @@ public class ArgumentsManager {
     @NonNull
     private final String[] arguments;
 
-    boolean isExistsFile = false;
-
+    private boolean isExistsFile = false;
 
     public void processArguments() throws NotFoundException {
         log.debug("Обработка данных, полученных из командной строки - Старт.");
@@ -63,11 +62,11 @@ public class ArgumentsManager {
         log.debug("Обработка данных, полученных из командной строки - Финиш.");
     }
 
-
     private void existsArgs(int numberArguments) throws NotFoundException {
         if (numberArguments == 0) {
             System.err.println("При запуске утилиты в командную строку не были переданы вводные данные и условия. " +
                     "Попробуйте ввести корректные данные и запустите программу ещё раз.");
+            log.error("Ошибка: программа запущена без данных.");
             throw new NotFoundException("В командную строку не были введены данные для работы утилиты.");
         }
     }
@@ -75,11 +74,11 @@ public class ArgumentsManager {
     private void processFile(String argument) {
         filesList.add(argument);
         if (!isExistsFile) {
-            log.debug("Один файл точно передан пользователем в командную строку. Обработка данных будет продолжена.");
+            log.debug("Имя одного файла точно передано пользователем в командную строку. Обработка данных будет " +
+                    "продолжена.");
             isExistsFile = true;
         }
     }
-
 
     private void processShortStatOption() {
         log.debug("Активирована опция -s");
@@ -108,10 +107,10 @@ public class ArgumentsManager {
 
     private void existsFile(boolean isExistsFile) throws NotFoundException {
         if (!isExistsFile) {
-            log.error("Ошибка!");
             System.err.println("При запуске утилиты в командную строку не был передан ни один файл для фильтрации. " +
                     "Выполнить операцию невозможно, попробуйте запустить программу ещё раз.");
-            throw new NotFoundException("В командную строку не были введены данные для работы утилиты.");
+            log.error("Ошибка: программа запущена без файлов.");
+            throw new NotFoundException("Через командную строку не были введены имена файлов для фильтрации.");
         }
     }
 

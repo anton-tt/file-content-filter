@@ -5,20 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92c79c67-b5b5-4eb2-a3ee-78db94fb46da" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/titov/exception/BadRequestException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/titov/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/titov/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/titov/enums/DataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/titov/enums/DataType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/titov/enums/Options.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/titov/enums/Option.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/titov/enums/Option.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/titov/enums/Option.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/titov/managers/ArgumentsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/titov/managers/ArgumentsManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/titov/managers/FileReaderManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/titov/managers/FileReaderManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/titov/managers/FileWriterManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/titov/managers/FileWriterManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/titov/managers/StatManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/titov/managers/StatManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/titov/managers/StringsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/titov/managers/StringsManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/floats.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/in1.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/in1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/in3.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/in3.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/integers.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/logback.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/strings.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +57,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/cardu/Documents/Java/Проекты/Третий/java-kanban&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/cardu/Documents/Java/Проекты/Второй/java-sprint2-hw&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;

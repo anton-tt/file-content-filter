@@ -35,10 +35,6 @@ public class StringsManager {
                 stringsList.add(dataString);
             }
         }
-        /*ArrayList<Long> sortedLongList = integersList
-                .stream()
-                .sorted()
-                .collect(Collectors.toCollection(ArrayList::new));*/
         log.debug("Фильтрация данных по типам - Финиш.");
     }
 
@@ -53,7 +49,8 @@ public class StringsManager {
         if (dataList.size() == 0) {
             System.err.println("В данных, полученных при обработке файлов, не была найдена ни одина строка. " +
                     "Программа закончила свою работу. Попробуйте повторить свой запрос с другими вводными данными.");
-            throw new NotFoundException("В обрабатываемых файлах отсутствуют данные для фильтрации по их типам.");
+            log.error("В файлах пользователя отсутствуют данные для фильтрации");
+            throw new NotFoundException("В пользовательских файлах отсутствуют данные для фильтрации по их типам.");
         }
     }
 

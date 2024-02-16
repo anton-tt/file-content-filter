@@ -32,7 +32,7 @@ public class FileWriterManager {
 
     static final String TRANSFER = System.lineSeparator();
     static final String SEPARATOR = File.separator;
-    static final String DEFAULT_PREFIX = "default-";
+    static final String DEFAULT_PREFIX = "default_";
 
     public void writerFiles() throws DataTypeNotFoundException {
         log.debug("Сохранение данных в файлы - Старт.");
