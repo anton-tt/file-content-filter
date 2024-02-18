@@ -3,6 +3,13 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+src/main/resources/integers.txt
+src/main/resources/default_integers.txt
+src/main/resources/floats.txt
+src/main/resources/default_floats.txt
+src/main/resources/strings.txt
+src/main/resources/default_strings.txt
+
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration  debug="true" scan="true">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+       <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default-->
+        <encoder>
+            <charset>Cp866</charset>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{20}) - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <root >
+        <level value="DEBUG" />
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
