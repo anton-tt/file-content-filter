@@ -4,9 +4,7 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import titov.enums.Option;
-import titov.exception.BadRequestException;
 import titov.exception.NotFoundException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,40 +22,21 @@ public class ArgumentsManager {
     private final String[] arguments;
 
     private boolean isExistsFile = false;
+    private List<String> optionsList = new ArrayList<>();
+    static final String FILE_EXTENSION = ".txt";
+    static final String HYPHEN_CHAR = "-";
 
     public void processArguments() throws NotFoundException {
         log.debug("Обработка данных, полученных из командной строки - Старт.");
         existsArgs(arguments.length);
-        String FILE_EXTENSION = ".txt";
-
-        for (int i = 0; i < arguments.length; i++) {
-            if (arguments[i].endsWith(FILE_EXTENSION)) {
-                processFile(arguments[i]);
+        for (String argument : arguments) {
+            if (argument.endsWith(FILE_EXTENSION)) {
+                processFile(argument);
             } else {
-                try {
-                    if (arguments[i].equals(Option.FULL_STAT.toString())) {
-                        processFullStatOption();
-                    } else if (arguments[i].equals(Option.SHORT_STAT.toString())) {
-                        processShortStatOption();
-                    } else if (arguments[i].equals(Option.ADD_TO_FILE.toString())) {
-                        processAddToFileOption();
-                    } else if (arguments[i].equals(Option.PREFIX.toString())) {
-                        processPrefixFileOption(arguments[i + 1]);
-                        i++;
-                    } else if (arguments[i].equals(Option.PATH.toString())) {
-                        processPathFileOption(arguments[i + 1]);
-                        i++;
-                    } else {
-                        throw new BadRequestException("Комбинация символов не соответствует ни одной команде.");
-                    }
-                } catch (BadRequestException ex) {
-                    System.err.printf("Переданная в командную строку комбинация символов \"%s\" " +
-                            "не соответствует ни имеющимся в программе опциям, ни названию файла. " +
-                            "Попробуйте ввести корректные данные и перезапустите программу.\n", arguments[i]);
-                    log.warn("Ошибка при введении данных в командную строку: " + ex);
-                }
+                optionsList.add(argument);
             }
         }
+        processOptions();
         existsFile(isExistsFile);
         log.debug("Обработка данных, полученных из командной строки - Финиш.");
     }
@@ -72,11 +51,48 @@ public class ArgumentsManager {
     }
 
     private void processFile(String argument) {
+        log.debug("Через командную строку пользователем было передано имя файла.");
         filesList.add(argument);
         if (!isExistsFile) {
-            log.debug("Имя одного файла точно передано пользователем в командную строку. Обработка данных будет " +
-                    "продолжена.");
             isExistsFile = true;
+        }
+    }
+
+    private void processOptions() {
+        log.debug("Через командную строку пользователем была передана опция фильтрации данных.");
+        int optionListSize = optionsList.size();
+        for (int i = 0; i < optionListSize; i++) {
+            String option = optionsList.get(i);
+            if (option.equals(Option.FULL_STAT.toString())) {
+                processFullStatOption();
+            } else if (option.equals(Option.SHORT_STAT.toString())) {
+                processShortStatOption();
+            } else if (option.equals(Option.ADD_TO_FILE.toString())) {
+                processAddToFileOption();
+            } else if (option.equals(Option.PREFIX.toString())) {
+                if (i == optionListSize - 1) {
+                    System.out.println("Опции \"-p\" не передали префикс при запуске утилиты. Сохранение файла " +
+                            "произойдёт по умолчанию.");
+                    log.info("Опции \"-p\" не передали префикс при запуске утилиты.");
+                    continue;
+                }
+                if (processPrefixFileOption(optionsList.get(i + 1))) {
+                    i++;
+                }
+            } else if (option.equals(Option.PATH.toString())) {
+                if (i == optionListSize - 1) {
+                    System.out.println("Опции \"-o\" не передали путь к новой папке при запуске утилиты. Сохранение " +
+                            "файла произойдёт по умолчанию.");
+                    log.info("Опции \"-o\" не передали путь к папке при запуске утилиты.");
+                    continue;
+                }
+                if (processPathFileOption(optionsList.get(i + 1))) {
+                    i++;
+                }
+            } else {
+                System.out.printf("Комбинация символов \"%s\" не соответствует ни одной команде.\n", option);
+                log.info("Комбинация символов \"{}\" не соответствует ни одной команде.", option);
+            }
         }
     }
 
@@ -95,14 +111,32 @@ public class ArgumentsManager {
         isAddToFile = true;
     }
 
-    private void processPrefixFileOption(String nextArgument) {
-        log.debug("Активирована опция -p");
-        prefixResultFile = nextArgument;
+    private boolean processPrefixFileOption(String nextArgument) {
+        if (nextArgument.startsWith(HYPHEN_CHAR) || nextArgument.endsWith(FILE_EXTENSION)) {
+            prefixResultFile = "";
+            System.out.println("Опции \"-p\" не передали префикс при запуске утилиты. Сохранение файла " +
+                    "произойдёт по умолчанию.");
+            log.info("Опции \"-p\" не передали префикс при запуске утилиты.");
+            return false;
+        } else {
+            log.debug("Активирована опция -p");
+            prefixResultFile = nextArgument;
+            return true;
+        }
     }
 
-    private void processPathFileOption(String nextArgument) {
-        log.debug("Активирована опция -o");
-        pathResultFile = nextArgument;
+    private boolean processPathFileOption(String nextArgument) {
+        if (nextArgument.startsWith(HYPHEN_CHAR) || nextArgument.endsWith(FILE_EXTENSION)) {
+            pathResultFile = "";
+            System.out.println("Опции \"-o\" не передали путь к новой папке при запуске утилиты. Сохранение файла " +
+                    "произойдёт по умолчанию.");
+            log.info("Опции \"-o\" не передали путь к папке при запуске утилиты.");
+            return false;
+        } else {
+            log.debug("Активирована опция -o");
+            pathResultFile = nextArgument;
+            return true;
+        }
     }
 
     private void existsFile(boolean isExistsFile) throws NotFoundException {

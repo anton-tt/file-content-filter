@@ -3,6 +3,7 @@ package titov.managers;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import titov.exception.NotFoundException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,16 +31,22 @@ public class FileReaderManager {
         boolean isExistsFile = false;
         for (String fileData : filesList) {
             Path path = getFilePath(fileData);
-            if (Files.exists(path)) {
-                readFileContents(path);
-                if (!isExistsFile) {
-                    log.debug("Один файл точно найден и прочитан. Обработка данных будет продолжена. ");
-                    isExistsFile = true;
+            try {
+                if (Files.exists(path)) {
+                    readFileContents(path);
+                    if (!isExistsFile) {
+                        log.debug("Один файл точно найден и прочитан. Обработка данных будет продолжена.");
+                        isExistsFile = true;
+                    }
+                } else {
+                    throw new NotFoundException(String.format("Файл с данными \"%s\", переданный пользователем " +
+                            "в командную строку, не найден.", fileData));
                 }
-            } else {
+            } catch (NotFoundException ex) {
                 System.err.printf("Файл с данными \"%s\" не найден. Проверьте, правильно ли введены параметры " +
-                        "при запуске программы, и повторите свой запрос после окончания работы программы.\n", fileData);
-                log.warn("Пользовательский файл с данными \"{}\" не найден.", fileData);
+                        "при запуске утилиты, и повторите свой запрос после окончания работы программы.\n",
+                        fileData);
+                log.warn("Ошибка: " + ex);
             }
         }
         existsFiles(isExistsFile);
@@ -59,7 +66,7 @@ public class FileReaderManager {
     }
 
     private void readFileContents(Path path) {
-        log.debug("Чтение содержимого файла по следующему пути: " + path);
+        log.debug("Чтение содержимого файла будет по следующему пути: " + path);
         try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
             while (bufferedReader.ready()) {
                 String line = bufferedReader.readLine();
@@ -67,16 +74,21 @@ public class FileReaderManager {
             }
             readFileList.add(path.getFileName().toString());
         } catch (IOException ex) {
-            System.out.printf("При чтении файла с данными \"%s\" произошла непредвиденная ошибка. " +
-                    "Рекомендуется перезапустить программу и повторить обработку файла.\n", path);
-            log.warn("Ошибка при чтении пользовательского файла: " + ex);
+            System.err.printf("При чтении файла с данными \"%s\" произошла непредвиденная ошибка. Работа утилиты " +
+                    "будет продолжена. По её окончании рекомендуется перезапустить программу и повторить обработку " +
+                    "этого файла.\n", path);
+            log.warn("Ошибка: " + ex);
         }
     }
 
     private void existsFiles(boolean isExistsFile) throws FileNotFoundException {
+        log.debug("Итоговая проверка перед фильтрацией данных: обработан ли хотя бы один файл.");
         if (!isExistsFile) {
-            throw new FileNotFoundException("По данным, переданным при запуске утилиты, не был найден ни один файл. " +
-                    "Программа закончила работу. Попробуйте повторить свой запрос с другими вводными данными.");
+            System.err.println("По данным, переданным при запуске утилиты, не был найден ни один файл. Программа " +
+                    "закончила работу. Попробуйте повторить свой запрос с другими вводными данными.");
+            log.error("Ни одного файла с данными для обработки не было найдено.");
+            throw new FileNotFoundException("Ни один из файлов, переданных пользователем в командную строку, " +
+                    "не найден программой.");
         }
     }
 

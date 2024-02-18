@@ -42,8 +42,10 @@ public class StatManager {
 
     private void getShortStat() {
         log.debug("Получение краткой статистики по трём категориям данных.");
-        System.out.printf("В категории \"Целые числа\" отсортировано и внесено в файл %s элементов.\n", integersList.size());
-        System.out.printf("В категории \"Дробные числа\" отсортировано и внесено в файл %s элементов.\n", floatsList.size());
+        System.out.printf("В категории \"Целые числа\" отсортировано и внесено в файл %s элементов.\n",
+                integersList.size());
+        System.out.printf("В категории \"Дробные числа\" отсортировано и внесено в файл %s элементов.\n",
+                floatsList.size());
         System.out.printf("В категории \"Строки\" отсортировано и внесено в файл %s элементов.\n", stringsList.size());
     }
 
@@ -56,9 +58,9 @@ public class StatManager {
         System.out.println("В категории \"Целые числа\":");
         System.out.printf("* отсортировано элементов и внесено в файл: %s,\n", integersNumber);
         System.out.printf("* минимальное число: %s,\n", integersList.get(0));
-        System.out.printf("* максимальное число:  %s,\n", integersList.get(integersNumber - 1));
+        System.out.printf("* максимальное число: %s,\n", integersList.get(integersNumber - 1));
         System.out.printf("* сумма всех отсортированных чисел: %s,\n", sum);
-        System.out.printf("* среднее арифметическое всех отсортированных чисел:  %s.\n\n", average);
+        System.out.printf("* среднее арифметическое всех отсортированных чисел: %s.\n", average);
     }
 
     private void getFloatsStat() {
@@ -84,7 +86,7 @@ public class StatManager {
         System.out.println("В категории \"Строки\":");
         System.out.printf("* отсортировано элементов и внесено в файл: %s,\n", stringLengthsNumber);
         System.out.printf("* размер минимальноЙ строки: %s,\n", stringLengthsList.get(0));
-        System.out.printf("* размер максимальной строки:  %s.\n", stringLengthsList.get(stringLengthsNumber - 1));
+        System.out.printf("* размер максимальной строки: %s.\n", stringLengthsList.get(stringLengthsNumber - 1));
     }
 
 }

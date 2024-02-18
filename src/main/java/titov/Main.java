@@ -14,11 +14,8 @@ import java.util.List;
 @Slf4j
 public class Main {
 
-
-   /* resources/
-            !**/   /*src/main/**/   /*resources/logback.xml*/
-
-    public static void main(String[] args) throws IOException, NotFoundException, DataTypeNotFoundException {
+    public static void main(String[] args) throws IOException, NotFoundException,
+            DataTypeNotFoundException {
         log.debug("Запуск программы.");
         ArgumentsManager argumentsManager = new ArgumentsManager(args);
         argumentsManager.processArguments();

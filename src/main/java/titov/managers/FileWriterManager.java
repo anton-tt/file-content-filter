@@ -60,7 +60,7 @@ public class FileWriterManager {
                 log.warn("Ошибка при сохранении в файл целых чисел: " + ex);
             }
         } else {
-            log.debug("При обработке вводных данных не было найдено ни одного целого числа." +
+            log.debug("При обработке вводных данных не было найдено ни одного целого числа. " +
                     "В файл \"{}\" никакой информации не добавлялось.", pathString);
         }
     }
@@ -83,7 +83,7 @@ public class FileWriterManager {
                 log.warn("Ошибка при сохранении в файл дробных чисел: " + ex);
             }
         } else {
-            log.debug("При обработке вводных данных не было найдено ни одного дробного числа." +
+            log.debug("При обработке вводных данных не было найдено ни одного дробного числа. " +
                     "В файл \"{}\" никакой информации не добавлялось.", pathString);
         }
     }
@@ -106,7 +106,7 @@ public class FileWriterManager {
                 log.warn("Ошибка при сохранении в файл строк: " + ex);
             }
         } else {
-            log.debug("При обработке вводных данных не было найдено ни одной строки." +
+            log.debug("При обработке вводных данных не было найдено ни одной строки. " +
                     "В файл \"{}\" никакой информации не добавлялось.", pathString);
         }
     }
@@ -151,7 +151,7 @@ public class FileWriterManager {
             System.err.printf("По пути \"%s\", введённому при запуске программы, не найдена необходимая папка. " +
                     "Файлы будут сохранены в папке по умолчанию с префиксом \"%s\".\n", pathResultFile,
                     DEFAULT_PREFIX);
-            log.warn("Папка для сохранения файлов не обнаружена. Сохранение по умолчанию. ", ex);
+            log.warn("Ошибка: " + ex);
             pathResultFile = "";
             prefixResultFile = prefixResultFile + DEFAULT_PREFIX;
         }
@@ -165,19 +165,24 @@ public class FileWriterManager {
 
     private void isExistDirectory() throws PathNotFoundException {
         if (!Files.isDirectory(Path.of(pathResultFile))) {
-            throw new PathNotFoundException("Папка, путь к которой ввёл пользователь при запуске программы, " +
-                    "не найдена.");
+            throw new PathNotFoundException(String.format("По пути \"%s\", который ввёл пользователь при запуске " +
+                    "программы, папка не найдена.", pathResultFile));
         }
     }
 
     private void isValidPrefixFile() {
+        String UNDERSCORE_CHAR = "_";
         Pattern invalidCharsPattern = Pattern.compile("[?<>\"*+:|/\\\\]");
         Matcher matcher = invalidCharsPattern.matcher(prefixResultFile);
         if (matcher.find()) {
-            log.info("Введённый пользователем префикс {} содержит запрещённые для имени файла символы.", prefixResultFile);
             System.err.printf("Введённый префикс для имени файла содержит запрещённые символы. " +
                     "Файлы будут сохранены с префиксом \"%s\". \n", DEFAULT_PREFIX);
+            log.info("Введённый пользователем префикс {} содержит запрещённые для имени файла символы.", prefixResultFile);
             prefixResultFile = DEFAULT_PREFIX;
+        }
+        if (!prefixResultFile.isBlank() && !prefixResultFile.endsWith(UNDERSCORE_CHAR)) {
+            prefixResultFile = prefixResultFile + UNDERSCORE_CHAR;
+            log.info("Пользователь ввёл префикс без символа \"{}\". Нижнее подчёркивание добавлено.", UNDERSCORE_CHAR);
         }
     }
 
